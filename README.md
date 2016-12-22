@@ -24,3 +24,8 @@ ZED + Xsens
 * Create imu and some utils classes.
 * Update CMakeLists.txt
 
+### v0.3 (2016/12/22)
+* Fix some bugs of frame class.
+* Create sliding window algorithm classs.
+* Achieve the propagation part of filter as the derivation of quaternion report @ UMN.
+
