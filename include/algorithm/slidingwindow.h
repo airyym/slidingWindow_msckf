@@ -21,11 +21,11 @@ class SlidingWindow {
 public:  
     SlidingWindow(int max_camera_poses);
     
-    CameraPose& operator[](std::size_t i);
-    const CameraPose& operator[](std::size_t i) const;
+    Frame& operator[](std::size_t i);
+    const Frame& operator[](std::size_t i) const;
     
     void deleteOldestCameraPose();
-    void addNewCameraPose(CameraPose&& pose);
+    void addNewCameraPose(Frame&& pose);
     
     iterator begin();
     iterator end();

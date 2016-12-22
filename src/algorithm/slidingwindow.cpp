@@ -25,7 +25,7 @@ void SlidingWindow::deleteOldestCameraPose() {
     buffer_.pop_front();
 }
 
-void SlidingWindow::addNewCameraPose(CameraPose&& pose) {
+void SlidingWindow::addNewCameraPose(Frame&& pose) {
     if (buffer_.full()) {
         throw std::runtime_error("SlidingWindow is full. Cannot add another CameraPose.");
     }
