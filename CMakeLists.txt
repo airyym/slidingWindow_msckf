@@ -72,6 +72,8 @@ src/utils/JPLquaternion.cpp
 #algorithm
 include/algorithm/residual.h
 src/algorithm/residual.cpp
+include/algorithm/slidingwindow.h
+src/algorithm/slidingwindow.cpp
 #others
 include/msckf.h
 src/msckf.cpp
