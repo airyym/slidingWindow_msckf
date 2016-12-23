@@ -114,7 +114,7 @@ Quaternion BodyState::propagateGyroscope(const BodyState &from_state, BodyState 
     double omega = rotation_est_mid.norm();
     Eigen::Matrix4d I_4x4 = Eigen::Matrix4d::Identity();
     Quaternion perturb;
-    if(omega < 0.00001)
+    if(omega > 0.00001)
     {
       Eigen::Vector3d q_hat = rotation_est_mid/omega*sin(0.5*omega*dt);
       double k = cos(0.5*omega*dt);
@@ -170,7 +170,7 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> BodyState::propagateAccelerometer(
     double omega = rotation_est_mid.norm();    
     Eigen::Matrix3d crossOmega = Quaternion::crossMatrix(rotation_est_mid);
     Eigen::Vector3d v_delta, p_delta;
-    if(omega < 0.00001)
+    if(omega > 0.00001)
     {
       Quaternion q_Bprev_G = from_state.q_B_G_;
       Eigen::Matrix3d R_Bnext_G = q_Bnext_Bcurrent.toRotationMatrix()*q_Bprev_G.toRotationMatrix();
@@ -179,7 +179,7 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> BodyState::propagateAccelerometer(
       v_delta = R_T_Bnext_G*(I_3x3*dt - (1-cos(omega*dt))*crossOmega/pow(omega,2) 
       + (omega*dt-sin(omega*dt))*crossOmega*crossOmega/pow(omega,3))*from_state.acceleration_estimate_ + global_gravity*dt;
       
-      p_delta = R_T_Bnext_G*(0.5*pow(dt,2)*I_3x3 + (omega*dt*cos(omega*dt)-sin(omega*dt))*crossOmega/pow(omega,3) 
+      p_delta = from_state.getVelocityInGlobalFrame()*delta_t + R_T_Bnext_G*(0.5*pow(dt,2)*I_3x3 + (omega*dt*cos(omega*dt)-sin(omega*dt))*crossOmega/pow(omega,3) 
       + (pow(omega*dt,2) - 2*cos(omega*dt) - 2*omega*dt*sin(omega*dt) + 2)*crossOmega*crossOmega/(2*pow(omega,4)))*from_state.acceleration_estimate_
       + 0.5*pow(dt,2)*global_gravity;
     }
@@ -189,7 +189,7 @@ std::pair<Eigen::Vector3d, Eigen::Vector3d> BodyState::propagateAccelerometer(
       Eigen::Matrix3d R_Bnext_G = q_Bnext_Bcurrent.toRotationMatrix()*q_Bprev_G.toRotationMatrix();
       Eigen::Matrix3d R_T_Bnext_G = R_Bnext_G.transpose();
       
-      v_delta = R_T_Bnext_G*(I_3x3*dt - 0.5*pow(dt,2)*crossOmega + pow(dt,3)*crossOmega*crossOmega/6)*from_state.acceleration_estimate_ 
+      v_delta = from_state.getVelocityInGlobalFrame()*delta_t + R_T_Bnext_G*(I_3x3*dt - 0.5*pow(dt,2)*crossOmega + pow(dt,3)*crossOmega*crossOmega/6)*from_state.acceleration_estimate_ 
       + global_gravity*dt;
       
       p_delta = R_T_Bnext_G*(0.5*pow(dt,2)*I_3x3 - pow(dt,3)*crossOmega/3 + pow(dt,4)*crossOmega*crossOmega/8)*from_state.acceleration_estimate_
